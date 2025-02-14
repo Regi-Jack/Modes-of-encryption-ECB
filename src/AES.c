@@ -107,121 +107,121 @@ void aes_invRound(unsigned char *state, unsigned char *roundKey);
 void aes_invMain(unsigned char *state, unsigned char *expandedKey, int nbrRounds);
 char aes_decrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size);
 
-int main(int argc, char *argv[])
-{
-    // the expanded keySize
-    int expandedKeySize = 176;
+// int main(int argc, char *argv[])
+// {
+//     // the expanded keySize
+//     int expandedKeySize = 176;
 
-    // the expanded key
-    unsigned char expandedKey[expandedKeySize];
+//     // the expanded key
+//     unsigned char expandedKey[expandedKeySize];
 
-    // the cipher key
-    unsigned char key[16] = {'k', 'k', 'k', 'k', 'e', 'e', 'e', 'e', 'y', 'y', 'y', 'y', '.', '.', '.', '.'};
+//     // the cipher key
+//     unsigned char key[16] = {'k', 'k', 'k', 'k', 'e', 'e', 'e', 'e', 'y', 'y', 'y', 'y', '.', '.', '.', '.'};
 
-    // the cipher key size
-    enum keySize size = SIZE_16;
+//     // the cipher key size
+//     enum keySize size = SIZE_16;
 
-    // the plaintext
-    unsigned char plaintext[16] = {'a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
+//     // the plaintext
+//     unsigned char plaintext[16] = {'a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
 
-    // the ciphertext
-    unsigned char ciphertext[16];
+//     // the ciphertext
+//     unsigned char ciphertext[16];
 
-    // the decrypted text
-    unsigned char decryptedtext[16];
+//     // the decrypted text
+//     unsigned char decryptedtext[16];
 
-    int i;
+//     int i;
 
-    printf("**************************************************\n");
-    printf("*   Basic implementation of AES algorithm in C   *\n");
-    printf("**************************************************\n");
+//     printf("**************************************************\n");
+//     printf("*   Basic implementation of AES algorithm in C   *\n");
+//     printf("**************************************************\n");
 
-    printf("\nCipher Key (HEX format):\n");
+//     printf("\nCipher Key (HEX format):\n");
 
-    for (i = 0; i < 16; i++)
-    {
-        // Print characters in HEX format, 16 chars per line
-        printf("%2.2x%c", key[i], ((i + 1) % 16) ? ' ' : '\n');
-    }
+//     for (i = 0; i < 16; i++)
+//     {
+//         // Print characters in HEX format, 16 chars per line
+//         printf("%2.2x%c", key[i], ((i + 1) % 16) ? ' ' : '\n');
+//     }
 
-    // Test the Key Expansion
-    expandKey(expandedKey, key, size, expandedKeySize);
+//     // Test the Key Expansion
+//     expandKey(expandedKey, key, size, expandedKeySize);
 
-    printf("\nExpanded Key (HEX format):\n");
+//     printf("\nExpanded Key (HEX format):\n");
 
-    for (i = 0; i < expandedKeySize; i++)
-    {
-        printf("%2.2x%c", expandedKey[i], ((i + 1) % 16) ? ' ' : '\n');
-    }
+//     for (i = 0; i < expandedKeySize; i++)
+//     {
+//         printf("%2.2x%c", expandedKey[i], ((i + 1) % 16) ? ' ' : '\n');
+//     }
 
-    printf("Enter 16 characters of plaintext: ");
-    // Take user input for plaintext (ensuring it's 16 characters)
-    i = 0;
-    for (i = 0; i < 16; i++) {
-        // Take one character from input at a time
-        char ch = getchar();
-        if(ch == '\n')
-            break;
-        plaintext[i] = ch;
-    }
-    if (i < 16) {
-        while(i<16) {
-            plaintext[i] = ' ';
-            i++;
-        }
-    }
+//     printf("Enter 16 characters of plaintext: ");
+//     // Take user input for plaintext (ensuring it's 16 characters)
+//     i = 0;
+//     for (i = 0; i < 16; i++) {
+//         // Take one character from input at a time
+//         char ch = getchar();
+//         if(ch == '\n')
+//             break;
+//         plaintext[i] = ch;
+//     }
+//     if (i < 16) {
+//         while(i<16) {
+//             plaintext[i] = ' ';
+//             i++;
+//         }
+//     }
 
-    printf("\nPlaintext :\n");
+//     printf("\nPlaintext :\n");
 
-    for (i = 0; i < 16; i++)
-    {
-        printf("%c", plaintext[i]);
-    }
+//     for (i = 0; i < 16; i++)
+//     {
+//         printf("%c", plaintext[i]);
+//     }
 
-    printf("\n");
+//     printf("\n");
 
-    printf("\nPlaintext (HEX format):\n");
-    for (i = 0; i < 16; i++)
-    {
-        printf("%c", plaintext[i]);
-    }
+//     printf("\nPlaintext (HEX format):\n");
+//     for (i = 0; i < 16; i++)
+//     {
+//         printf("%c", plaintext[i]);
+//     }
 
-    // AES Encryption
-    aes_encrypt(plaintext, ciphertext, key, SIZE_16);
+//     // AES Encryption
+//     aes_encrypt(plaintext, ciphertext, key, SIZE_16);
 
-    printf("\nCiphertext (HEX format):\n");
+//     printf("\nCiphertext (HEX format):\n");
 
-    for (i = 0; i < 16; i++)
-    {
-        printf("%2.2x ", ciphertext[i]);
-    }
+//     for (i = 0; i < 16; i++)
+//     {
+//         printf("%2.2x ", ciphertext[i]);
+//     }
 
-    printf("\n");
+//     printf("\n");
 
-    // AES Decryption
-    aes_decrypt(ciphertext, decryptedtext, key, SIZE_16);
+//     // AES Decryption
+//     aes_decrypt(ciphertext, decryptedtext, key, SIZE_16);
 
-    printf("\nDecrypted text (HEX format):\n");
+//     printf("\nDecrypted text (HEX format):\n");
 
-    for (i = 0; i < 16; i++)
-    {
-        printf("%2.2x ", decryptedtext[i]);
-    }
+//     for (i = 0; i < 16; i++)
+//     {
+//         printf("%2.2x ", decryptedtext[i]);
+//     }
         
-    printf("\n");
+//     printf("\n");
 
 
-    printf("\nDecrypted text:\n");
+//     printf("\nDecrypted text:\n");
 
-    for (i = 0; i < 16; i++)
-    {
-        printf("%c", decryptedtext[i]);
-    }
+//     for (i = 0; i < 16; i++)
+//     {
+//         printf("%c", decryptedtext[i]);
+//     }
 
-    printf("\n");
+//     printf("\n");
 
-    return 0;
-}
+//     return 0;
+// }
 
 unsigned char getSBoxValue(unsigned char num)
 {

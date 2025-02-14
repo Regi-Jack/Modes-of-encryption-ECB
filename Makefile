@@ -1,29 +1,28 @@
+# Compiler settings
 CC = gcc
-CFLAGS = -g
-SOURCE_DIR = src
+CFLAGS = -g -Wall
+
+# Directories for source, build, and object files
+SRC_DIR = src
 BUILD_DIR = build
 
-# Define the source files
-SOURCES = $(SOURCE_DIR)/ECB.c
-# Define the object files
-OBJECTS = $(SOURCES:$(SOURCE_DIR)/%.c=$(BUILD_DIR)/%.o)
+# Sources
+SRC = $(SRC_DIR)/ECB.c $(SRC_DIR)/AES.c  # Add AES.c to the source files
 
-all: $(BUILD_DIR) aes
+# Object files - specify the build directory for the object files
+OBJ = $(SRC:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 
-# Create build directory
-$(BUILD_DIR):
-	mkdir -pv $(BUILD_DIR)
+# Executable
+EXEC = $(BUILD_DIR)/aes
 
-# Compile AES binary
-aes: $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/aes $(OBJECTS)
+# Compilation rules
+$(EXEC): $(OBJ)
+	$(CC) $(OBJ) -o $(EXEC)
 
-# Compile individual source files into object files
-$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
+# Rule for creating object files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean the build directory
+# Clean up
 clean:
-	rm -rf $(BUILD_DIR)
-
-.PHONY: all clean
+	rm -f $(BUILD_DIR)/*.o $(EXEC)

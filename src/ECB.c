@@ -9,45 +9,52 @@
 // Function to apply padding to plaintext if necessary
 void applyPadding(unsigned char *data, size_t *dataSize) {
     size_t len = *dataSize;
+    if(len % AES_BLOCK_SIZE == 0) {
+        printf("padding not req.\n");
+        return;
+    }
     size_t padding = AES_BLOCK_SIZE - (len % AES_BLOCK_SIZE);
     for (size_t i = len; i < len + padding; i++) {
-        data[i] = padding;  // PKCS7 padding scheme
+        data[i] = '.';
+        if(i+1 == len + padding)
+            data[i+1] = '\0';  
     }
     *dataSize += padding;
 }
 
-// Function to remove padding after decryption
-void removePadding(unsigned char *data, size_t *dataSize) {
-    size_t len = *dataSize;
-    size_t padding = data[len - 1];
-    *dataSize -= padding;
+// // Function to remove padding after decryption
+// void removePadding(unsigned char *data, size_t *dataSize) {
+//     size_t len = *dataSize;
+//     size_t padding = data[len - 1];
+//     *dataSize -= padding;
     
-    // Null-terminate the decrypted string
-    data[*dataSize] = '\0';
-}
+//     // Null-terminate the decrypted string
+//     data[*dataSize] = '\0';
+// }
 
 // Function to encrypt data in ECB mode
-char aes_ecb_encrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size, size_t inputSize) {
+char aes_ecb_encrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size, size_t *inputSize) {
     unsigned char expandedKey[240];  // Max size for key expansion
-    unsigned char state[AES_BLOCK_SIZE];
-    size_t dataSize = inputSize;
+    unsigned char plaintext[AES_BLOCK_SIZE];
+    unsigned char ciphertext[AES_BLOCK_SIZE];
+    size_t dataSize = *inputSize;
     
     // Apply padding to the input data if needed
-    if (dataSize % AES_BLOCK_SIZE != 0) {
-        printf("Applying padding ...\n");
-        applyPadding(input, &dataSize);
-    } else {
-        printf("Padding not req...\n");
-    }
+    applyPadding(input, &dataSize);
 
+    // printf("New data size: %ld\n", dataSize);
+    *inputSize = dataSize;
+
+    // printf("New data: %s\n", input);
+ 
     // Expand the key for encryption
     expandKey(expandedKey, key, size, 240);
 
     // Encrypt each block
     for (size_t i = 0; i < dataSize; i += AES_BLOCK_SIZE) {
-        memcpy(state, input + i, AES_BLOCK_SIZE);  // Copy one block of plaintext into the state
-        aes_encrypt(state, state, expandedKey, size);  // Encrypt the block
-        memcpy(output + i, state, AES_BLOCK_SIZE);   // Store the encrypted block
+        memcpy(plaintext, input + i, AES_BLOCK_SIZE);  // Copy one block of input into the variable plaintext
+        aes_encrypt(plaintext, ciphertext, expandedKey, size);  // Encrypt the plaintext block into ciphertext
+        memcpy(output + i, ciphertext, AES_BLOCK_SIZE);   // Store the ciphertext block to output
     }
 
 
@@ -55,26 +62,27 @@ char aes_ecb_encrypt(unsigned char *input, unsigned char *output, unsigned char 
 }
 
 // Function to decrypt data in ECB mode
-// char aes_ecb_decrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size, size_t inputSize) {
-//     unsigned char expandedKey[240];  // Max size for key expansion
-//     unsigned char state[AES_BLOCK_SIZE];
-//     size_t dataSize = inputSize;
+char aes_ecb_decrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size, size_t inputSize) {
+    unsigned char expandedKey[240];  // Max size for key expansion
+    unsigned char plaintext[AES_BLOCK_SIZE];
+    unsigned char ciphertext[AES_BLOCK_SIZE];
+    size_t dataSize = inputSize;
 
-//     // Expand the key for decryption
-//     expandKey(expandedKey, key, size, 240);
+    // Expand the key for decryption
+    expandKey(expandedKey, key, size, 240);
 
-//     // Decrypt each block
-//     for (size_t i = 0; i < dataSize; i += AES_BLOCK_SIZE) {
-//         memcpy(state, input + i, AES_BLOCK_SIZE);  // Copy one block of ciphertext into the state
-//         aes_decrypt(state, state, expandedKey, size);  // Decrypt the block
-//         memcpy(output + i, state, AES_BLOCK_SIZE);   // Store the decrypted block
-//     }
+    // Decrypt each block
+    for (size_t i = 0; i < dataSize; i += AES_BLOCK_SIZE) {
+        memcpy(ciphertext, input + i, AES_BLOCK_SIZE);  // Copy one block of ciphertext into the state
+        aes_decrypt(ciphertext, plaintext, expandedKey, size);  // Decrypt the block
+        memcpy(output + i, plaintext, AES_BLOCK_SIZE);   // Store the decrypted block
+    }
 
-//     // Remove padding if present
-//     // removePadding(output, &dataSize);
+    // Remove padding if present
+    // removePadding(output, &dataSize);
     
-//     return SUCCESS;
-// }
+    return SUCCESS;
+}
 
 int main() {
     // Test data and key
@@ -84,45 +92,43 @@ int main() {
     // Allocate a buffer for input, encrypted, and decrypted data (e.g., 1000 bytes)
     unsigned char input[MSSG_SIZE];
     unsigned char encrypted[MSSG_SIZE];  // Extra space for padding
-    // unsigned char decrypted[MSSG_SIZE];  // Output for decrypted data
+    unsigned char decrypted[MSSG_SIZE];  // Output for decrypted data
     
     // Prompt the user for input (up to MSSG_SIZE bytes)
     printf("Enter the message: ");
     scanf("%s", input);
-    printf("%s\n", input);
     // fgets((char *)input, sizeof(input), stdin);  // Read input from user
     
     // Calculate input size
     size_t inputSize = strlen((char *)input);
     
-    // Make sure to remove the newline character at the end if present
-    if (inputSize > 0 && input[inputSize - 1] == '\n') {
-        input[inputSize - 1] = '\0';
-        inputSize--;
-    }
+    // // Make sure to remove the newline character at the end if present
+    // if (inputSize > 0 && input[inputSize - 1] == '\n') {
+    //     input[inputSize - 1] = '\0';
+    //     inputSize--;
+    // }
 
     printf("Size of input: %ld\n", inputSize);
     
     printf("Original Input: %s\n", input);
 
     // Encrypt the data
-    aes_ecb_encrypt(input, encrypted, key, SIZE_32, inputSize);
+    aes_ecb_encrypt(input, encrypted, key, SIZE_32, &inputSize);
+
+    printf("New input size : %ld\n", inputSize);
+
+    printf("New input: %s\n", input);
+
     printf("Encrypted Output:\n");
-    if(inputSize % AES_BLOCK_SIZE == 0) {
-        for (size_t i = 0; i < inputSize; i++) {
+    for (size_t i = 0; i < inputSize; i++) {
             printf("%02x ", encrypted[i]); 
-        }
-    } else {
-        for (size_t i = 0; i < inputSize + (AES_BLOCK_SIZE - (inputSize % AES_BLOCK_SIZE)); i++) {
-            printf("%02x ", encrypted[i]);
-        }
     }
     
     printf("\n");
 
-    // // Decrypt the data
-    // aes_ecb_decrypt(encrypted, decrypted, key, SIZE_32, inputSize);
-    // printf("Decrypted Output: %s\n", decrypted);
+    // Decrypt the data
+    aes_ecb_decrypt(encrypted, decrypted, key, SIZE_32, inputSize);
+    printf("Decrypted Output: %s\n", decrypted);
 
     return 0;
 }

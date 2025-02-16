@@ -84,51 +84,57 @@ char aes_ecb_decrypt(unsigned char *input, unsigned char *output, unsigned char 
     return SUCCESS;
 }
 
-int main() {
-    // Test data and key
-    
-    unsigned char key[32] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x97, 0x75, 0x46, 0x5d, 0xa1, 0x24, 0x56, 0x09, 0x88, 0x8b, 0x22, 0x33, 0x3c, 0x98, 0x78, 0x35, 0x45, 0x23, 0x01, 0x72, 0xa2};
-    
-    // Allocate a buffer for input, encrypted, and decrypted data (e.g., 1000 bytes)
-    unsigned char input[MSSG_SIZE];
-    unsigned char encrypted[MSSG_SIZE];  // Extra space for padding
-    unsigned char decrypted[MSSG_SIZE];  // Output for decrypted data
-    
-    // Prompt the user for input (up to MSSG_SIZE bytes)
-    printf("Enter the message: ");
-    scanf("%s", input);
-    // fgets((char *)input, sizeof(input), stdin);  // Read input from user
-    
-    // Calculate input size
-    size_t inputSize = strlen((char *)input);
-    
-    // // Make sure to remove the newline character at the end if present
-    // if (inputSize > 0 && input[inputSize - 1] == '\n') {
-    //     input[inputSize - 1] = '\0';
-    //     inputSize--;
-    // }
 
-    printf("Size of input: %ld\n", inputSize);
+
+
+
+
+
+// int main() {
+//     // Test data and key
     
-    printf("Original Input: %s\n", input);
-
-    // Encrypt the data
-    aes_ecb_encrypt(input, encrypted, key, SIZE_32, &inputSize);
-
-    printf("New input size : %ld\n", inputSize);
-
-    printf("New input: %s\n", input);
-
-    printf("Encrypted Output:\n");
-    for (size_t i = 0; i < inputSize; i++) {
-            printf("%02x ", encrypted[i]); 
-    }
+//     unsigned char key[32] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x97, 0x75, 0x46, 0x5d, 0xa1, 0x24, 0x56, 0x09, 0x88, 0x8b, 0x22, 0x33, 0x3c, 0x98, 0x78, 0x35, 0x45, 0x23, 0x01, 0x72, 0xa2};
     
-    printf("\n");
+//     // Allocate a buffer for input, encrypted, and decrypted data (e.g., 1000 bytes)
+//     unsigned char input[MSSG_SIZE];
+//     unsigned char encrypted[MSSG_SIZE];  // Extra space for padding
+//     unsigned char decrypted[MSSG_SIZE];  // Output for decrypted data
+    
+//     // Prompt the user for input (up to MSSG_SIZE bytes)
+//     printf("Enter the message: ");
+//     scanf("%s", input);
+//     // fgets((char *)input, sizeof(input), stdin);  // Read input from user
+    
+//     // Calculate input size
+//     size_t inputSize = strlen((char *)input);
+    
+//     // // Make sure to remove the newline character at the end if present
+//     // if (inputSize > 0 && input[inputSize - 1] == '\n') {
+//     //     input[inputSize - 1] = '\0';
+//     //     inputSize--;
+//     // }
 
-    // Decrypt the data
-    aes_ecb_decrypt(encrypted, decrypted, key, SIZE_32, inputSize);
-    printf("Decrypted Output: %s\n", decrypted);
+//     printf("Size of input: %ld\n", inputSize);
+    
+//     printf("Original Input: %s\n", input);
 
-    return 0;
-}
+//     // Encrypt the data
+//     aes_ecb_encrypt(input, encrypted, key, SIZE_32, &inputSize);
+
+//     printf("New input size : %ld\n", inputSize);
+
+//     printf("New input: %s\n", input);
+
+//     printf("Encrypted Output:\n");
+//     for (size_t i = 0; i < inputSize; i++) {
+//             printf("%02x ", encrypted[i]); 
+//     }
+    
+//     printf("\n");
+
+//     // Decrypt the data
+//     aes_ecb_decrypt(encrypted, decrypted, key, SIZE_32, inputSize);
+//     printf("Decrypted Output: %s\n", decrypted);
+
+//     return 0;
+// }

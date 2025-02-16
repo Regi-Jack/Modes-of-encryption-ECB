@@ -1,28 +1,34 @@
-# Compiler settings
+# Compiler and flags
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -Wall -g -Iheaders
 
-# Directories for source, build, and object files
+# Directories
 SRC_DIR = src
-BUILD_DIR = build
+OBJ_DIR = build
+BIN_DIR = .
+HEADER_DIR = headers
 
-# Sources
-SRC = $(SRC_DIR)/ECB.c $(SRC_DIR)/AES.c  # Add AES.c to the source files
+# Source and Object files
+SRC_FILES = $(SRC_DIR)/AES.c $(SRC_DIR)/ECB.c $(SRC_DIR)/main.c $(SRC_DIR)/IMG.c
+OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-# Object files - specify the build directory for the object files
-OBJ = $(SRC:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
+# Output executable
+TARGET = $(BIN_DIR)/main
 
-# Executable
-EXEC = $(BUILD_DIR)/aes
+# Default target
+all: $(TARGET)
 
-# Compilation rules
-$(EXEC): $(OBJ)
-	$(CC) $(OBJ) -o $(EXEC)
+# Link object files into the final executable
+$(TARGET): $(OBJ_FILES)
+	$(CC) -o $@ $^ -ljpeg
 
-# Rule for creating object files
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+# Compile the source files into object files
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean up
+# Clean the build directory
 clean:
-	rm -f $(BUILD_DIR)/*.o $(EXEC)
+	rm -rf $(OBJ_DIR)/*.o $(TARGET)
+
+# Phony targets
+.PHONY: all clean

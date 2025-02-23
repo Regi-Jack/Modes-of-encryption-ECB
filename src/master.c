@@ -60,7 +60,7 @@ int main()
     if (getcwd(cwd, sizeof(cwd)) != NULL)
     {
         // printf("Current Working Directory: %s\n", cwd);
-        snprintf(path_to_img, sizeof(path_to_img), "%s/image/man.pgm", cwd);
+        snprintf(path_to_img, sizeof(path_to_img), "%s/image/pikachu.pgm", cwd);
         snprintf(path_to_enc_image, sizeof(path_to_enc_image), "%s/output/output.pgm", cwd);
         // printf("Image Directory: %s\n", path_to_img);
     }

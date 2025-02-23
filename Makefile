@@ -1,34 +1,31 @@
-# Compiler and flags
+# Compiler
 CC = gcc
-CFLAGS = -Wall -g -Iheaders
+CFLAGS = -Wall -Wextra -O2
 
 # Directories
 SRC_DIR = src
-OBJ_DIR = build
-BIN_DIR = .
-HEADER_DIR = headers
+BUILD_DIR = build
+HEADERS_DIR = headers
+OUTPUT_DIR = output
 
-# Source and Object files
-SRC_FILES = $(SRC_DIR)/AES.c $(SRC_DIR)/ECB.c $(SRC_DIR)/main.c
-OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+# Source and Object Files
+SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC_FILES))
+EXECUTABLE = main  # This is the final output binary
 
-# Output executable
-TARGET = $(BIN_DIR)/main
+# Build the executable
+all: $(EXECUTABLE)
 
-# Default target
-all: $(TARGET)
+$(EXECUTABLE): $(OBJ_FILES)
+	$(CC) $(CFLAGS) $^ -o $@
 
-# Link object files into the final executable
-$(TARGET): $(OBJ_FILES)
-	$(CC) -o $@ $^ 
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -I$(HEADERS_DIR) -c $< -o $@
 
-# Compile the source files into object files
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
 
-# Clean the build directory
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(TARGET)
+	rm -rf $(BUILD_DIR) $(EXECUTABLE) $(OUTPUT_DIR)/enc_image.pgm
 
-# Phony targets
 .PHONY: all clean

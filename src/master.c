@@ -6,6 +6,7 @@
 #include "ECB.h"
 #include "CBC.h"
 #include "CFB128.h"
+#include "CTR.h"
 
 void encrypt_pgm(const char *input_file, const char *output_file, const char *mode)
 {
@@ -46,7 +47,10 @@ void encrypt_pgm(const char *input_file, const char *output_file, const char *mo
         aes_cbc_encrypt(image_data, encrypted_data, key, SIZE_32, &image_size, iv);
     } else if(!strcmp(mode, "cfb128")) {
         aes_cfb128_encrypt(image_data, encrypted_data, key, SIZE_32, &image_size, iv);
-    } else {
+    } else if(!strcmp(mode, "ctr")) {
+        aes_ctr_encrypt(image_data, encrypted_data, key, SIZE_32, &image_size, iv);
+    } 
+    else {
         perror("Invalid Mode!");
         return;
     }
@@ -82,6 +86,6 @@ int main()
         return 1;
     }
 
-    encrypt_pgm(path_to_img, path_to_enc_image, "ecb");
+    encrypt_pgm(path_to_img, path_to_enc_image, "ctr");
     return 0;
 }

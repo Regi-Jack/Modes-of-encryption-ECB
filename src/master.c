@@ -5,6 +5,7 @@
 #include <limits.h>
 #include "ECB.h"
 #include "CBC.h"
+#include "CFB128.h"
 
 void encrypt_pgm(const char *input_file, const char *output_file, const char *mode)
 {
@@ -43,6 +44,8 @@ void encrypt_pgm(const char *input_file, const char *output_file, const char *mo
         aes_ecb_encrypt(image_data, encrypted_data, key, SIZE_32, &image_size);
     } else if(!strcmp(mode, "cbc")) {
         aes_cbc_encrypt(image_data, encrypted_data, key, SIZE_32, &image_size, iv);
+    } else if(!strcmp(mode, "cfb128")) {
+        aes_cfb128_encrypt(image_data, encrypted_data, key, SIZE_32, &image_size, iv);
     } else {
         perror("Invalid Mode!");
         return;
@@ -79,6 +82,6 @@ int main()
         return 1;
     }
 
-    encrypt_pgm(path_to_img, path_to_enc_image, "cbc");
+    encrypt_pgm(path_to_img, path_to_enc_image, "ecb");
     return 0;
 }

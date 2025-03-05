@@ -4,8 +4,9 @@
 #include <unistd.h>
 #include <limits.h>
 #include "ECB.h"
+#include "CBC.h"
 
-void encrypt_pgm(const char *input_file, const char *output_file)
+void encrypt_pgm(const char *input_file, const char *output_file, const char *mode)
 {
     FILE *file = fopen(input_file, "rb");
     if (!file)
@@ -36,8 +37,16 @@ void encrypt_pgm(const char *input_file, const char *output_file)
     unsigned char *encrypted_data = (unsigned char *)malloc(image_size);
 
     unsigned char key[32] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6, 0xab, 0xf7, 0x97, 0x75, 0x46, 0x5d, 0xa1, 0x24, 0x56, 0x09, 0x88, 0x8b, 0x22, 0x33, 0x3c, 0x98, 0x78, 0x35, 0x45, 0x23, 0x01, 0x72, 0xa2};
+    unsigned char iv[AES_BLOCK_SIZE] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 
-    aes_ecb_encrypt(image_data, encrypted_data, key, SIZE_32, &image_size);
+    if(!strcmp(mode, "ecb")) {
+        aes_ecb_encrypt(image_data, encrypted_data, key, SIZE_32, &image_size);
+    } else if(!strcmp(mode, "cbc")) {
+        aes_cbc_encrypt(image_data, encrypted_data, key, SIZE_32, &image_size, iv);
+    } else {
+        perror("Invalid Mode!");
+        return;
+    }
 
     FILE *out_file = fopen(output_file, "wb");
     fprintf(out_file, "P5\n%d %d\n%d\n", width, height, maxval);
@@ -70,6 +79,6 @@ int main()
         return 1;
     }
 
-    encrypt_pgm(path_to_img, path_to_enc_image);
+    encrypt_pgm(path_to_img, path_to_enc_image, "cbc");
     return 0;
 }

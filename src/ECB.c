@@ -7,7 +7,7 @@
 #define MSSG_SIZE 1000
 
 // Function to apply padding to plaintext if necessary
-void applyPadding(unsigned char *data, size_t *dataSize) {
+static void applyPadding(unsigned char *data, size_t *dataSize) {
     size_t len = *dataSize;
     if(len % AES_BLOCK_SIZE == 0) {
         printf("padding not req.\n");

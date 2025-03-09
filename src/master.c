@@ -88,6 +88,6 @@ int main()
         return 1;
     }
 
-    encrypt_pgm(path_to_img, path_to_enc_image, "cbc");
+    encrypt_pgm(path_to_img, path_to_enc_image, "ofb");
     return 0;
 }

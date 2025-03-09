@@ -4,6 +4,4 @@ Here is a side by side analysis of effects of different modes of encryption on i
 
 ### Electronic Code Book (ECB):
 
-| ![Input Image](https://github.com/Regi-Jack/Modes-of-encryption-ECB/tree/master/readme_images/pikachu.png) | ➡️ | ![Output Image](https://github.com/Regi-Jack/Modes-of-encryption-ECB/tree/master/readme_images/ecb_pikachu.png) |
-
----
+| <img src="https://raw.githubusercontent.com/Regi-Jack/Modes-of-encryption-ECB/master/readme_images/pikachu.png" width="300" /> <img src="https://raw.githubusercontent.com/Regi-Jack/Modes-of-encryption-ECB/master/readme_images/ecb_pikachu.png" width="300" /> |

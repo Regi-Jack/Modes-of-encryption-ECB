@@ -78,7 +78,7 @@ int main()
     if (getcwd(cwd, sizeof(cwd)) != NULL)
     {
         // printf("Current Working Directory: %s\n", cwd);
-        snprintf(path_to_img, sizeof(path_to_img), "%s/image/goku.pgm", cwd);
+        snprintf(path_to_img, sizeof(path_to_img), "%s/image/pikachu.pgm", cwd);
         snprintf(path_to_enc_image, sizeof(path_to_enc_image), "%s/output/output.pgm", cwd);
         // printf("Image Directory: %s\n", path_to_img);
     }
@@ -88,6 +88,6 @@ int main()
         return 1;
     }
 
-    encrypt_pgm(path_to_img, path_to_enc_image, "ecb");
+    encrypt_pgm(path_to_img, path_to_enc_image, "cbc");
     return 0;
 }

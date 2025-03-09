@@ -1,10 +1,9 @@
-# Image Comparison
+# Modes of encryption on Image
 
-Below is a comparison of two images side by side, with an arrow pointing from the first image to the second.
+Here is a side by side analysis of effects of different modes of encryption on image.
 
-### Input Image vs Output Image:
-| Input Image | ➡️ | Output Image |
-|-------------|-----|--------------|
-| ![Input Image](readme_images/pikachu.pgm) | ➡️ | ![Output Image](readme_images/ecb_pikachu.pgm) |
+### Electronic Code Book (ECB):
+
+| ![Input Image](https://github.com/Regi-Jack/Modes-of-encryption-ECB/tree/master/readme_images/pikachu.png) | ➡️ | ![Output Image](https://github.com/Regi-Jack/Modes-of-encryption-ECB/tree/master/readme_images/ecb_pikachu.png) |
 
 ---
